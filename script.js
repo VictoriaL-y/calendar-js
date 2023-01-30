@@ -28,9 +28,6 @@ function displayCalendar() {
         'December',
     ]
 
-    console.log(daysOfWeek);
-    console.log(monthsOfYear);
-
     // Generate a Calendar
 
     let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -43,7 +40,10 @@ function displayCalendar() {
     //Returns the day of the week (0 – 6) for the specified date according to local time.
     // 0 is a Sunday
     let startingDay = firstDay.getDay();
-    console.log(startingDay);
+    if(startingDay==0) {
+        startingDay = 6
+    }
+    // console.log(startingDay);
 
 
 
@@ -75,16 +75,17 @@ function displayCalendar() {
     let currentRow = document.createElement("tr");
     for (let i = 0; i < startingDay; i++) {
         let emptyCell = document.createElement("td");
+        console.log(emptyCell);
         currentRow.appendChild(emptyCell);
         
     }
-    console.log('this is currentRow' + currentRow);
+
 
     for (let i = startingDay; i < 7; i++) {
         let dayCell = document.createElement("td");
         dayCell.innerHTML = currentDay;
         currentRow.appendChild(dayCell);
-        console.log(currentDay); 
+        console.log(dayCell);
         currentDay++;
     }
     table.appendChild(currentRow);
@@ -98,13 +99,19 @@ function displayCalendar() {
             let dayCell = document.createElement("td");
             dayCell.innerHTML = currentDay;
             currentRow.appendChild(dayCell);
-            console.log(currentDay);
+            // console.log(currentDay);
+            
             currentDay++;
             
         }
         table.appendChild(currentRow);
     }
 }
+
+// document.getElementById('previous').addEventListener(("click", function() {
+//     theDate -= 86400000;
+//     document.getElementById('month-year').innerText = getTheDate(theDate)
+//   }))
 
 
     displayCalendar();
