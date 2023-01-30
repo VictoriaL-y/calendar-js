@@ -1,8 +1,10 @@
+let date = new Date();
+let currentMonth = date.getMonth();
+console.log(currentMonth);
+let currentYear = date.getFullYear();
+
 function displayCalendar() {
     console.log('Hey');
-    let date = new Date();
-    let currentMonth = date.getMonth();
-    let currentYear = date.getFullYear();
     let daysOfWeek = [
         'Mon',
         'Tue',
@@ -40,7 +42,7 @@ function displayCalendar() {
     //Returns the day of the week (0 – 6) for the specified date according to local time.
     // 0 is a Sunday
     let startingDay = firstDay.getDay();
-    if(startingDay==0) {
+    if (startingDay == 0) {
         startingDay = 6
     }
     // console.log(startingDay);
@@ -77,7 +79,7 @@ function displayCalendar() {
         let emptyCell = document.createElement("td");
         console.log(emptyCell);
         currentRow.appendChild(emptyCell);
-        
+
     }
 
 
@@ -100,18 +102,22 @@ function displayCalendar() {
             dayCell.innerHTML = currentDay;
             currentRow.appendChild(dayCell);
             // console.log(currentDay);
-            
+
             currentDay++;
-            
+
         }
         table.appendChild(currentRow);
     }
 }
 
-// document.getElementById('previous').addEventListener(("click", function() {
-//     theDate -= 86400000;
-//     document.getElementById('month-year').innerText = getTheDate(theDate)
-//   }))
+let buttPrev = document.getElementById('previous');
+buttPrev.addEventListener("click", function () {
+    console.log('Button Previous');
+    date.setMonth(date.getMonth()-1);
+    let previousMonth = date.getMonth();
+    console.log(previousMonth);
+    
+});
 
 
-    displayCalendar();
+displayCalendar();
