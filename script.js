@@ -2,10 +2,7 @@ let date = new Date();
 let currentMonth = date.getMonth();
 console.log(currentMonth);
 let currentYear = date.getFullYear();
-
-function displayCalendar() {
-    console.log('Hey');
-    let daysOfWeek = [
+let daysOfWeek = [
         'Mon',
         'Tue',
         'Wed',
@@ -30,6 +27,10 @@ function displayCalendar() {
         'December',
     ]
 
+function displayCalendar() {
+    console.log('Hey');
+    
+
     // Generate a Calendar
 
     let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -51,9 +52,10 @@ function displayCalendar() {
 
     // creating table header
     const table = document.createElement("table");
-    document.querySelector('#calender-table').appendChild(table);
+    document.querySelector('#calendar-table').appendChild(table);
     const headerRow = document.createElement("tr");
-    const headerMonth = document.createElement("th");
+    let headerMonth = document.createElement("th");
+    headerMonth.setAttribute('id', 'headerMonth');
     headerMonth.colSpan = 7;
     headerMonth.innerHTML = date.toLocaleString('default', {
         month: 'long'
@@ -110,14 +112,45 @@ function displayCalendar() {
     }
 }
 
+displayCalendar();
+
 let buttPrev = document.getElementById('previous');
 buttPrev.addEventListener("click", function () {
     console.log('Button Previous');
     date.setMonth(date.getMonth()-1);
-    let previousMonth = date.getMonth();
-    console.log(previousMonth);
+    currentMonth = date.getMonth();
+    if(currentMonth == 11) {
+        currentYear--;
+    }
+    // console.log(previousMonth);
+    // document.querySelector('#headerMonth').innerHTML = monthsOfYear[previousMonth] + ' ' + currentYear;
+    // firstDay = new Date(currentYear, previousMonth, 1);
+
+    // let date = new Date(currentYear, previousMonth, 1);
+    // console.log(currentMonth);
+    // let currentYear = date.getFullYear();
+    document.querySelector('#calendar-table').innerHTML = '';
+    displayCalendar();
+    
+
     
 });
 
+let buttNext = document.getElementById('next');
+buttNext.addEventListener("click", function () {
+    console.log('Button Next');
+    date.setMonth(date.getMonth()+1);
+    currentMonth = date.getMonth();
+    if(currentMonth == 0) {
+        currentYear++;
+    }
+    // console.log(nextMonth);
+    // console.log(monthsOfYear[nextMonth]);
+    // document.querySelector('#headerMonth').innerHTML = monthsOfYear[nextMonth] + ' ' + currentYear;
+    // firstDay = new Date(currentYear, nextMonth, 1);
+    document.querySelector('#calendar-table').innerHTML = '';
+    displayCalendar();
+});
 
-displayCalendar();
+
+
