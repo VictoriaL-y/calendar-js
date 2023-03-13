@@ -1,4 +1,6 @@
-
+.description {
+    text-transform: capitalize;
+}
 
 table {
     width: 100%;
@@ -8,10 +10,15 @@ table {
 
 th, td {
     width: 14.28%;
+    height: 60px;
     text-align: center;
     border: 1px solid coral;
 }
 
 th {
     background-color: #f2f2f2;
+}
+
+td#today {
+    background-color: aqua;
 }

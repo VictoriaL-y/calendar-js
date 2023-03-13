@@ -79,7 +79,11 @@ function displayCalendar() {
     let currentRow = document.createElement("tr");
     for (let i = 0; i < startingDay; i++) {
         let emptyCell = document.createElement("td");
-        console.log(emptyCell);
+        emptyCell.innerHTML = 'gt';
+        emptyCell.addEventListener("click", function () {
+            console.log(emptyCell.innerHTML + "empty cells work")
+        });
+        console.log(emptyCell + 'empty cell is here');
         currentRow.appendChild(emptyCell);
 
     }
@@ -88,25 +92,38 @@ function displayCalendar() {
     for (let i = startingDay; i < 7; i++) {
         let dayCell = document.createElement("td");
         dayCell.innerHTML = currentDay;
+        
         currentRow.appendChild(dayCell);
         console.log(dayCell);
         currentDay++;
     }
     table.appendChild(currentRow);
 
+
     while (currentDay <= daysInMonth) {
         currentRow = document.createElement("tr");
+        
         for (let i = 0; i < 7; i++) {
             if (currentDay > daysInMonth) {
                 break;
             }
+    
             let dayCell = document.createElement("td");
             dayCell.innerHTML = currentDay;
+            // if(dayCell.innerHTML != '') {
+                dayCell.addEventListener("click", function () {
+                    console.log("day cells work")
+                    console.log(dayCell);
+                })
+
+            // }
+            
             currentRow.appendChild(dayCell);
-            // console.log(currentDay);
-
+            if(currentDay == date.getDate() && currentMonth == new Date().getMonth()) {
+                console.log(currentMonth)
+                dayCell.setAttribute('id', 'today');
+            } 
             currentDay++;
-
         }
         table.appendChild(currentRow);
     }
@@ -151,6 +168,93 @@ buttNext.addEventListener("click", function () {
     document.querySelector('#calendar-table').innerHTML = '';
     displayCalendar();
 });
+
+let buttPlus = document.getElementById('addEvent')
+buttPlus.addEventListener("click", function () {
+    console.log('it works');
+});
+
+// Get your current position
+
+let lat;
+let long;
+
+function getPosition() {
+
+    const success = (position) => {
+        console.log(position);
+        lat = position.coords.latitude;
+        long = position.coords.longitude;
+
+        function getCity() {
+            console.log(lat)
+            console.log(long)
+            fetch(
+                "http://api.openweathermap.org/geo/1.0/reverse?lat="
+                + lat
+                + "&lon="
+                + long
+                + "&limit=2&appid="
+                + 'e9ca98e57b68488e060c64799d86e7fc'
+                // 'https://api.openweathermap.org/data/2.5/weather?q=Berlin&units=metric&appid=e9ca98e57b68488e060c64799d86e7fc'
+            ).then((response)=> response.json())
+            .then((data)=> weather.fetchWeather(data));
+        }
+
+        let weather = {
+            apiKey:"e9ca98e57b68488e060c64799d86e7fc",
+            // getCity: function(){
+            //     fetch(
+            //         "http://api.openweathermap.org/geo/1.0/reverse?lat="
+            //         + lat
+            //         + "&lon="
+            //         + long
+            //         + "&limit=2&appid="
+            //         + this.apiKey
+            //         // 'https://api.openweathermap.org/data/2.5/weather?q=Berlin&units=metric&appid=e9ca98e57b68488e060c64799d86e7fc'
+            //     ).then((response)=> response.json())
+            //     .then((data)=> thi(data));
+            // },
+            fetchWeather: function(data){
+                console.log(data)
+                let city=data[0].name;
+                console.log(city);
+                fetch(
+                    "https://api.openweathermap.org/data/2.5/weather?q="
+                    + city
+                    + "&units=metric&appid="
+                    + this.apiKey
+                    // 'https://api.openweathermap.org/data/2.5/weather?q=Berlin&units=metric&appid=e9ca98e57b68488e060c64799d86e7fc'
+                ).then((response)=> response.json())
+                .then((data)=> this.displayWeather(data));
+            },
+            displayWeather: function(data){
+                const{name}=data;
+                const{icon, description}=data.weather[0];
+                const{temp,humidity}=data.main;
+                const{speed} = data.wind;
+                document.querySelector(".city").innerText = "Weather in " + name;
+                document.querySelector(".icon").src = "https://openweathermap.org/img/wn/" + icon + "@2x.png";
+                document.querySelector(".description").innerText = description;
+                document.querySelector(".temp").innerText = parseInt(temp) + "°C";
+                document.querySelector(".humidity").innerText = "Humidity: " + humidity + "%";
+                document.querySelector(".wind").innerText = "Wind speed: " + speed + " km/h";
+                console.log(name, icon, description, humidity, speed);
+            }
+        }
+
+        getCity();
+    }
+
+    const error = () => {
+        console.log('no');
+        // window.status.textContent = 'Unable to retrieve your location';
+    }
+
+    navigator.geolocation.getCurrentPosition(success, error);
+};
+getPosition();
+
 
 
 
