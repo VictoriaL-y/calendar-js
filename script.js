@@ -2,146 +2,176 @@ let date = new Date();
 let currentMonth = date.getMonth();
 console.log(currentMonth);
 let currentYear = date.getFullYear();
-let daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+let daysOfWeek = [
+        'Mon',
+        'Tue',
+        'Wed',
+        'Thu',
+        'Fri',
+        'Sat',
+        'Sun'
+    ];
 
-let monthsOfYear = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "Mai",
-    "Juni",
-    "Juli",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-];
-
-// create a new date object for the first day of the current month
-var firstDayOfMonth = new Date(currentYear, currentMonth, 1);
-
-// get the day of the week for the first day of the current month
-var dayOfWeek = firstDayOfMonth.getDay();
-
-let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-let firstDay = new Date(currentYear, currentMonth, 1);
-console.log(firstDay);
-
-// calculate the number of days in the current month
-let numDays = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-// calculate the number of days to show from the previous month
-var numDaysPrevMonth = dayOfWeek;
-
-// calculate the number of days to show from the next month
-var numDaysNextMonth =
-    6 - new Date(currentYear, currentMonth, numDays).getDay();
-
+    let monthsOfYear = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'Mai',
+        'Juni',
+        'Juli',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+    ]
 
 function displayCalendar() {
+    console.log('Hey');
+    
+
     // Generate a Calendar
+
+    let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    console.log(daysInMonth);
+
+    let daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
+    console.log("daysInPrevMonth is " + daysInPrevMonth);
+
+    
+
+    let firstDay = new Date(currentYear, currentMonth, 1);
+    console.log(firstDay);
 
     //Returns the day of the week (0 – 6) for the specified date according to local time.
     // 0 is a Sunday
     let startingDay = firstDay.getDay();
     if (startingDay == 0) {
-        startingDay = 6;
+        startingDay = 6
+    } else {
+        startingDay--;
     }
+
+    //Now 6 is Sunday 
     // console.log(startingDay);
+
+
 
     // creating table header
     const table = document.createElement("table");
-    document.querySelector("#calendar-table").appendChild(table);
+    document.querySelector('#calendar-table').appendChild(table);
     const headerRow = document.createElement("tr");
     let headerMonth = document.createElement("th");
-    headerMonth.setAttribute("id", "headerMonth");
+    headerMonth.setAttribute('id', 'headerMonth');
     headerMonth.colSpan = 7;
-    headerMonth.innerHTML =
-        date.toLocaleString("default", {
-            month: "long",
-        }) +
-        " " +
-        currentYear;
+    headerMonth.innerHTML = date.toLocaleString('default', {
+        month: 'long'
+    }) + " " + currentYear
     headerRow.appendChild(headerMonth);
     table.appendChild(headerRow);
 
     // create table for days of the week
-    let weekDaysRow = document.createElement("tr");
+    let weekDaysRow = document.createElement('tr');
     for (let i = 0; i < 7; i++) {
-        let weekDayHeader = document.createElement("th");
+        let weekDayHeader = document.createElement('th');
         weekDayHeader.innerHTML = daysOfWeek[i];
         weekDaysRow.appendChild(weekDayHeader);
+        console.log(weekDayHeader);
     }
 
     table.appendChild(weekDaysRow);
+    console.log("starting day is:" + startingDay);
 
+    function addEvent() {
+        console.log("day cells work")
+        console.log(dayCell);
+    }
 
     let currentDay = 1;
     let currentRow = document.createElement("tr");
-    // loop through the days to show from the previous month
-    for (let i = numDaysPrevMonth; i > 0; i--) {
-        let prevDate = new Date(currentYear, currentMonth, 0 - i + 1);
-        // table += '<td class="prev-month">' + date.getDate() + "</td>";
-        let emptyCell = document.createElement("td");
-        emptyCell.innerHTML = prevDate.getDate();
-        emptyCell.addEventListener("click", function () {
-            console.log(emptyCell.innerHTML + "empty cells work");
+    // Create cells for the last dates of the previous month
+    for (let i = startingDay; i > 0; i--) {
+        let prevCell = document.createElement("td");
+        prevCell.innerHTML = daysInPrevMonth - i + 1;
+        currentRow.appendChild(prevCell);
+        prevCell.addEventListener("click", function () {
+            console.log(prevCell.innerHTML + "prevCell work")
         });
-        console.log(emptyCell + "empty cell is here");
-        currentRow.appendChild(emptyCell);
+        console.log(prevCell + 'prevCell is here');
+
     }
+
+    // var numDaysNextMonth =
+    // 6 - new Date(currentYear, currentMonth, numDays).getDay();
+    // console.log(numDaysNextMonth);
+
+
+    // while (currentDay <= daysInMonth) {
+    //     currentRow = document.createElement("tr");
+        
+    //     for (let i = 0; i < 7; i++) {
+    //         let dayCell = document.createElement("td");
+    //         if (currentDay <= daysInMonth) {
+    //             dayCell.innerHTML = currentDay;
+    //         } else {
+    //             dayCell.innerHTML = new Date(currentYear, currentMonth + 1, currentDay - daysInMonth).getDate();
+
+    //         }
+    
+            
+    //         // if(dayCell.innerHTML != '') {
+    //             dayCell.addEventListener("click", function () {
+    //                 console.log("day cells work")
+    //                 console.log(dayCell);
+    //             })
+
+    //         // }
 
     for (let i = startingDay; i < 7; i++) {
         let dayCell = document.createElement("td");
         dayCell.innerHTML = currentDay;
-
+        dayCell.addEventListener("click", function () {
+            console.log("day cells work")
+            console.log(dayCell);
+        })
         currentRow.appendChild(dayCell);
-        // console.log(dayCell);
+        console.log(dayCell);
         currentDay++;
     }
     table.appendChild(currentRow);
 
-    while (currentDay <= daysInMonth || currentRow.children.length < 7) {
+
+    while (currentDay <= daysInMonth) {
         currentRow = document.createElement("tr");
-
+        
         for (let i = 0; i < 7; i++) {
+            if (currentDay > daysInMonth) {
+                let nextMonthDates = 1;
+                for (let j = i; j < 7; j++) {
+                let dayCell = document.createElement("td");
+                dayCell.innerHTML = nextMonthDates;
+                currentRow.appendChild(dayCell);
+                nextMonthDates++;
+                }
+                break;
+            }
+    
             let dayCell = document.createElement("td");
-            if (currentDay <= daysInMonth) {
-                dayCell.innerHTML = currentDay;
-            } else {
-                dayCell.innerHTML = new Date(currentYear, currentMonth + 1, currentDay - daysInMonth).getDate();
-
-            }
-
-            // for(let i = 1; i <= numDaysNextMonth; i++) {
-            //     // let nextDate = new Date(currentYear, currentMonth + 1, i);
-            //     // dayCell.innerHTML = nextDate;
-            //     dayCell.innerHTML = i;
-            //     currentRow.appendChild(dayCell);
-            //     // console.log("next date: " + nextDate.getDate() + ", dayCell: " + dayCell.innerHTML);
-            //     console.log("i: " + i);
-            // }
-            // console.log("number of the days of the next month " + numDaysNextMonth);
-
-
-            console.log("current day: " + currentDay)
+            dayCell.innerHTML = currentDay;
             // if(dayCell.innerHTML != '') {
-            dayCell.addEventListener("click", function () {
-                console.log("day cells work");
-            });
+                dayCell.addEventListener("click", function () {
+                    console.log("day cells work")
+                    console.log(dayCell);
+                })
 
             // }
-
+            
             currentRow.appendChild(dayCell);
-            if (currentDay == new Date().getDate() &&
-                currentYear == new Date().getFullYear() &&
-                currentMonth == new Date().getMonth()) {
-                console.log(currentMonth);
-                dayCell.setAttribute("id", "today");
-            }
+            if(currentDay == date.getDate() && currentMonth == new Date().getMonth()) {
+                console.log(currentMonth)
+                dayCell.setAttribute('id', 'today');
+            } 
             currentDay++;
         }
         table.appendChild(currentRow);
@@ -150,12 +180,12 @@ function displayCalendar() {
 
 displayCalendar();
 
-let buttPrev = document.getElementById("previous");
+let buttPrev = document.getElementById('previous');
 buttPrev.addEventListener("click", function () {
-    console.log("Button Previous");
-    date.setMonth(date.getMonth() - 1);
+    console.log('Button Previous');
+    date.setMonth(date.getMonth()-1);
     currentMonth = date.getMonth();
-    if (currentMonth == 11) {
+    if(currentMonth == 11) {
         currentYear--;
     }
     // console.log(previousMonth);
@@ -165,29 +195,32 @@ buttPrev.addEventListener("click", function () {
     // let date = new Date(currentYear, previousMonth, 1);
     // console.log(currentMonth);
     // let currentYear = date.getFullYear();
-    document.querySelector("#calendar-table").innerHTML = "";
+    document.querySelector('#calendar-table').innerHTML = '';
     displayCalendar();
+    
+
+    
 });
 
-let buttNext = document.getElementById("next");
+let buttNext = document.getElementById('next');
 buttNext.addEventListener("click", function () {
-    console.log("Button Next");
-    date.setMonth(date.getMonth() + 1);
+    console.log('Button Next');
+    date.setMonth(date.getMonth()+1);
     currentMonth = date.getMonth();
-    if (currentMonth == 0) {
+    if(currentMonth == 0) {
         currentYear++;
     }
     // console.log(nextMonth);
     // console.log(monthsOfYear[nextMonth]);
     // document.querySelector('#headerMonth').innerHTML = monthsOfYear[nextMonth] + ' ' + currentYear;
     // firstDay = new Date(currentYear, nextMonth, 1);
-    document.querySelector("#calendar-table").innerHTML = "";
+    document.querySelector('#calendar-table').innerHTML = '';
     displayCalendar();
 });
 
-let buttPlus = document.getElementById("addEvent");
+let buttPlus = document.getElementById('addEvent')
 buttPlus.addEventListener("click", function () {
-    console.log("it works");
+    console.log('it works');
 });
 
 // Get your current position
@@ -196,29 +229,29 @@ let lat;
 let long;
 
 function getPosition() {
+
     const success = (position) => {
         console.log(position);
         lat = position.coords.latitude;
         long = position.coords.longitude;
 
         function getCity() {
-            console.log(lat);
-            console.log(long);
+            console.log(lat)
+            console.log(long)
             fetch(
-                "http://api.openweathermap.org/geo/1.0/reverse?lat=" +
-                lat +
-                "&lon=" +
-                long +
-                "&limit=2&appid=" +
-                "e9ca98e57b68488e060c64799d86e7fc"
+                "http://api.openweathermap.org/geo/1.0/reverse?lat="
+                + lat
+                + "&lon="
+                + long
+                + "&limit=2&appid="
+                + 'API Key'
                 // 'https://api.openweathermap.org/data/2.5/weather?q=Berlin&units=metric&appid=e9ca98e57b68488e060c64799d86e7fc'
-            )
-                .then((response) => response.json())
-                .then((data) => weather.fetchWeather(data));
+            ).then((response)=> response.json())
+            .then((data)=> weather.fetchWeather(data));
         }
 
         let weather = {
-            apiKey: "e9ca98e57b68488e060c64799d86e7fc",
+            apiKey:"API Key",
             // getCity: function(){
             //     fetch(
             //         "http://api.openweathermap.org/geo/1.0/reverse?lat="
@@ -231,46 +264,45 @@ function getPosition() {
             //     ).then((response)=> response.json())
             //     .then((data)=> thi(data));
             // },
-            fetchWeather: function (data) {
-                console.log(data);
-                let city = data[0].name;
+            fetchWeather: function(data){
+                console.log(data)
+                let city=data[0].name;
                 console.log(city);
                 fetch(
-                    "https://api.openweathermap.org/data/2.5/weather?q=" +
-                    city +
-                    "&units=metric&appid=" +
-                    this.apiKey
-                    // 'https://api.openweathermap.org/data/2.5/weather?q=Berlin&units=metric&appid=e9ca98e57b68488e060c64799d86e7fc'
-                )
-                    .then((response) => response.json())
-                    .then((data) => this.displayWeather(data));
+                    "https://api.openweathermap.org/data/2.5/weather?q="
+                    + city
+                    + "&units=metric&appid="
+                    + this.apiKey
+                ).then((response)=> response.json())
+                .then((data)=> this.displayWeather(data));
             },
-            displayWeather: function (data) {
-                const { name } = data;
-                const { icon, description } = data.weather[0];
-                const { temp, humidity } = data.main;
-                const { speed } = data.wind;
+            displayWeather: function(data){
+                const{name}=data;
+                const{icon, description}=data.weather[0];
+                const{temp,humidity}=data.main;
+                const{speed} = data.wind;
                 document.querySelector(".city").innerText = "Weather in " + name;
-                document.querySelector(".icon").src =
-                    "https://openweathermap.org/img/wn/" + icon + "@2x.png";
+                document.querySelector(".icon").src = "https://openweathermap.org/img/wn/" + icon + "@2x.png";
                 document.querySelector(".description").innerText = description;
                 document.querySelector(".temp").innerText = parseInt(temp) + "°C";
-                document.querySelector(".humidity").innerText =
-                    "Humidity: " + humidity + "%";
-                document.querySelector(".wind").innerText =
-                    "Wind speed: " + speed + " km/h";
+                document.querySelector(".humidity").innerText = "Humidity: " + humidity + "%";
+                document.querySelector(".wind").innerText = "Wind speed: " + speed + " km/h";
                 console.log(name, icon, description, humidity, speed);
-            },
-        };
+            }
+        }
 
         getCity();
-    };
+    }
 
     const error = () => {
-        console.log("no");
+        console.log('no');
         // window.status.textContent = 'Unable to retrieve your location';
-    };
+    }
 
     navigator.geolocation.getCurrentPosition(success, error);
-}
+};
 getPosition();
+
+
+
+
