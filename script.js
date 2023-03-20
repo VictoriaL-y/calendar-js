@@ -65,6 +65,32 @@ const eventsArr = [
             },
         ],
     },
+    {
+        day: 4,
+        month: 4,
+        year: 2023,
+        events: [
+            {
+                title: "Event 5 sit amet",
+                time: "09:10 AM",
+            },
+            {
+                title: "Event 6",
+                time: "08:20 AM",
+            },
+        ],
+    },
+    {
+        day: 28,
+        month: 2,
+        year: 2023,
+        events: [
+            {
+                title: "Event of Februar",
+                time: "09:10 AM",
+            },
+        ],
+    },
 ];
 
 function displayCalendar() {
@@ -252,10 +278,6 @@ function addListner() {
     days.forEach((day) => {
         day.addEventListener("click", (e) => {
 
-            // call active day after click
-            getActiveDay(e.target.innerHTML);
-            updateEvents(Number(e.target.innerHTML));
-
             // set current day as active day
             activeDay = Number(e.target.innerHTML);
 
@@ -328,6 +350,10 @@ function addListner() {
                 // remaining current month days
                 e.target.classList.add("active");
             }
+
+            // call active day after click
+            getActiveDay(e.target.innerHTML);
+            updateEvents(Number(e.target.innerHTML));
         })
     });
 }
@@ -472,7 +498,7 @@ function getPosition() {
                 + long
                 + "&limit=2&appid="
                 // + 'API KEY'
-                // 'https://api.openweathermap.org/data/2.5/weather?q=Berlin&units=metric&appid=e9ca98e57b68488e060c64799d86e7fc'
+                
             ).then((response) => response.json())
                 .then((data) => weather.fetchWeather(data));
         }
@@ -480,19 +506,6 @@ function getPosition() {
         let weather = {
             // apiKey: "API KEY",
 
-
-            // getCity: function(){
-            //     fetch(
-            //         "http://api.openweathermap.org/geo/1.0/reverse?lat="
-            //         + lat
-            //         + "&lon="
-            //         + long
-            //         + "&limit=2&appid="
-            //         + this.apiKey
-            //         // 'https://api.openweathermap.org/data/2.5/weather?q=Berlin&units=metric&appid=e9ca98e57b68488e060c64799d86e7fc'
-            //     ).then((response)=> response.json())
-            //     .then((data)=> thi(data));
-            // },
             fetchWeather: function (data) {
                 console.log(data)
                 let city = data[0].name;
