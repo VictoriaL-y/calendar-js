@@ -7,6 +7,8 @@ let headerMonth = document.getElementById("headerMonth");
 const eventDay = document.querySelector(".event-day"),
     eventDate = document.querySelector(".event-date"),
     eventsContainer = document.querySelector(".events");
+let activeMonth;
+let activeYear;
 let daysOfWeek = [
     'Mon',
     'Tue',
@@ -157,7 +159,6 @@ function displayCalendar() {
         prevCell.innerHTML = daysInPrevMonth - i + 1;
         currentRow.appendChild(prevCell);
         prevCell.setAttribute('class', 'prevDays');
-        console.log(prevCell + 'prevCell is here');
 
     }
 
@@ -166,7 +167,11 @@ function displayCalendar() {
         let dayCell = document.createElement("td");
         dayCell.innerHTML = currentDay;
         currentRow.appendChild(dayCell);
-        console.log(dayCell);
+        if (activeDay == currentDay &&
+            activeMonth == currentMonth &&
+            activeYear == currentYear) {
+            dayCell.setAttribute("class", 'active');
+        }
         currentDay++;
     }
     table.appendChild(currentRow);
@@ -179,7 +184,6 @@ function displayCalendar() {
         // // Create cells for the first dates of the next month 
         for (let i = 0; i < 7; i++) {
             if (currentDay > daysInMonth) {
-                console.log("current day is " + currentDay);
                 for (let j = i; j < 7; j++) {
                     let dayCell = document.createElement("td");
                     dayCell.innerHTML = nextMonthDates;
@@ -192,19 +196,20 @@ function displayCalendar() {
 
             let dayCell = document.createElement("td");
             dayCell.innerHTML = currentDay;
-            dayCell.addEventListener("click", function () {
-                console.log("day cells work")
-                console.log(dayCell);
-            })
+
+            if (activeDay == currentDay &&
+                activeMonth == currentMonth &&
+                activeYear == currentYear) {
+                dayCell.setAttribute("class", 'active');
+            }
 
             currentRow.appendChild(dayCell);
             if (currentDay == date.getDate() && currentMonth == new Date().getMonth()) {
-                console.log(currentMonth)
                 dayCell.setAttribute('id', 'today');
-                dayCell.setAttribute("class", 'active');
-    
+
                 // show all events and the date of today in notes after right after page load
-                if(activeDay == undefined) {
+                if (activeDay == undefined) {
+                    dayCell.setAttribute("class", 'active');
                     getActiveDay(currentDay);
                     updateEvents(currentDay);
                 }
@@ -216,7 +221,6 @@ function displayCalendar() {
 
     //Create an additional 8-th row in the calendar, if there are only 7
     totalRowCount = table.rows.length;
-    console.log("totalRowCount is " + totalRowCount);
     if (totalRowCount == 7) {
         currentRow = document.createElement("tr");
         for (let j = 0; j < 7; j++) {
@@ -232,7 +236,6 @@ function displayCalendar() {
     // Create button for previous month
     let buttPrev = document.createElement('button');
     buttPrev.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
-    console.log('Button Previous');
     buttPrev.setAttribute('id', 'buttPrev');
     buttPrev.addEventListener("click", function () {
         console.log('Button Previous');
@@ -243,6 +246,7 @@ function displayCalendar() {
         }
         document.querySelector('#calendar-table').innerHTML = '';
         displayCalendar();
+
     });
     document.getElementById('headerMonth').appendChild(buttPrev);
 
@@ -252,7 +256,6 @@ function displayCalendar() {
     buttNext.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
     buttNext.setAttribute('id', 'buttNext');
     buttNext.addEventListener("click", function () {
-        console.log('Button Next');
         date.setMonth(date.getMonth() + 1);
         currentMonth = date.getMonth();
         if (currentMonth == 0) {
@@ -260,102 +263,101 @@ function displayCalendar() {
         }
         document.querySelector('#calendar-table').innerHTML = '';
         displayCalendar();
+
     });
     document.getElementById('headerMonth').appendChild(buttNext);
 
 
-
-
-    // updateEvents(headerMonth);
     addListner(headerMonth);
-
-
 
 }
 
 function addListner() {
-    const days = document.querySelectorAll("td");
-    days.forEach((day) => {
-        day.addEventListener("click", (e) => {
+    setTimeout(() => {
+        const days = document.querySelectorAll("td");
+        days.forEach((day) => {
+            day.addEventListener("click", (e) => {
 
-            // set current day as active day
-            activeDay = Number(e.target.innerHTML);
+                // set current day as active day
+                activeDay = Number(e.target.innerHTML);
 
-            //remove active from already active day
-            days.forEach((day) => {
-                day.classList.remove("active");
-            });
+                //remove active from already active day
+                days.forEach((day) => {
+                    day.classList.remove("active");
+                });
 
-            if (e.target.classList.contains("prevDays")) {
-                date.setMonth(date.getMonth() - 1);
-                currentMonth = date.getMonth();
-                if (currentMonth == 11) {
-                    currentYear--;
+                if (e.target.classList.contains("prevDays")) {
+                    date.setMonth(date.getMonth() - 1);
+                    currentMonth = date.getMonth();
+                    if (currentMonth == 11) {
+                        currentYear--;
+                    }
+                    document.querySelector('#calendar-table').innerHTML = '';
+                    displayCalendar();
+
+                    //if today date exist in the month, remove active class
+                    let todayDate = document.getElementById('today');
+                    if (todayDate) {
+                        todayDate.classList.remove("active");
+                    }
+                    setTimeout(() => {
+                        //select all days of that month
+                        const days = document.querySelectorAll("td");
+
+                        //after going to prev month add active to clicked
+                        days.forEach((day) => {
+                            if (
+                                !day.classList.contains('prevDays') &&
+                                day.innerHTML === e.target.innerHTML
+                            ) {
+                                day.classList.add("active");
+
+                            }
+                        });
+                    }, 100);
+                    // same with next month days
+                } else if (e.target.classList.contains("lastDays")) {
+                    date.setMonth(date.getMonth() + 1);
+                    currentMonth = date.getMonth();
+                    if (currentMonth == 0) {
+                        currentYear++;
+                    }
+                    document.querySelector('#calendar-table').innerHTML = '';
+                    displayCalendar();
+
+                    //if today date exist in the month, remove active class
+                    let todayDate = document.getElementById('today');
+                    if (todayDate) {
+                        todayDate.classList.remove("active");
+                    }
+
+                    setTimeout(() => {
+                        //select all days of that month
+                        const days = document.querySelectorAll("td");
+
+                        //after going to next month add active to clicked
+                        days.forEach((day) => {
+                            if (
+                                !day.classList.contains('lastDays') &&
+                                day.innerHTML === e.target.innerHTML
+                            ) {
+                                day.classList.add("active");
+
+                            }
+                        });
+                    }, 100);
+                } else {
+                    // remaining current month days
+                    e.target.classList.add("active");
                 }
-                document.querySelector('#calendar-table').innerHTML = '';
-                displayCalendar();
 
-                //if today date exist in the month, remove active class
-                let todayDate = document.getElementById('today');
-                if (todayDate) {
-                    todayDate.classList.remove("active");
-                }
-                setTimeout(() => {
-                    //select all days of that month
-                    const days = document.querySelectorAll("td");
+                // call active day after click
+                getActiveDay(e.target.innerHTML);
+                updateEvents(Number(e.target.innerHTML));
+            })
+        });
+    }, 100);
 
-                    //after going to prev month add active to clicked
-                    days.forEach((day) => {
-                        if (
-                            !day.classList.contains('prevDays') &&
-                            day.innerHTML === e.target.innerHTML
-                        ) {
-                            day.classList.add("active");
-
-                        }
-                    });
-                }, 100);
-                // same with next month days
-            } else if (e.target.classList.contains("lastDays")) {
-                date.setMonth(date.getMonth() + 1);
-                currentMonth = date.getMonth();
-                if (currentMonth == 0) {
-                    currentYear++;
-                }
-                document.querySelector('#calendar-table').innerHTML = '';
-                displayCalendar();
-
-                //if today date exist in the month, remove active class
-                let todayDate = document.getElementById('today');
-                if (todayDate) {
-                    todayDate.classList.remove("active");
-                }
-
-                setTimeout(() => {
-                    //select all days of that month
-                    const days = document.querySelectorAll("td");
-
-                    //after going to next month add active to clicked
-                    days.forEach((day) => {
-                        if (
-                            !day.classList.contains('lastDays') &&
-                            day.innerHTML === e.target.innerHTML
-                        ) {
-                            day.classList.add("active");
-
-                        }
-                    });
-                }, 100);
-            } else {
-                // remaining current month days
-                e.target.classList.add("active");
-            }
-
-            // call active day after click
-            getActiveDay(e.target.innerHTML);
-            updateEvents(Number(e.target.innerHTML));
-        })
-    });
 }
 
 
@@ -367,22 +369,15 @@ function getActiveDay(headerMonth) {
         eventDay.innerHTML = dayName;
         // console.log(eventDay + " is eventDay")
         eventDate.innerHTML = headerMonth + " " + monthsOfYear[day.getMonth()] + " " + day.getFullYear();
+        activeMonth = day.getMonth();
+        activeYear = day.getFullYear();
     }, 100);
 }
-// getActiveDay();
 
 //function update events when a day is active
 function updateEvents(headerMonth) {
     let events = "";
     eventsArr.forEach((event) => {
-        // get events of active days only
-        // console.log(currentMonth + 1 + " is currentMonth")
-        // console.log(event.day + " is event day")
-        // console.log(event.month + " is event month")
-        // console.log(event.year + " is event year")
-        // console.log(headerMonth + " is headerMonth")
-        // console.log(currentMonth + 1 + " is currentMonth")
-        // console.log(currentYear + " is currentYear")
         if (
             headerMonth === event.day &&
             currentMonth + 1 === event.month &&
@@ -411,8 +406,6 @@ function updateEvents(headerMonth) {
     console.log(events);
     eventsContainer.innerHTML = events;
 }
-
-//   updateEvents();
 
 
 displayCalendar();
@@ -497,14 +490,13 @@ function getPosition() {
                 + "&lon="
                 + long
                 + "&limit=2&appid="
-                // + 'API KEY'
-                
+                + 'API KEY'
             ).then((response) => response.json())
                 .then((data) => weather.fetchWeather(data));
         }
 
         let weather = {
-            // apiKey: "API KEY",
+            apiKey: "API KEY",
 
             fetchWeather: function (data) {
                 console.log(data)
