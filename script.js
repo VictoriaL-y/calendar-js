@@ -176,8 +176,12 @@ function displayCalendar() {
                 console.log(currentMonth)
                 dayCell.setAttribute('id', 'today');
                 dayCell.setAttribute("class", 'active');
-                // headerMonth = currentDay;
-                // console.log("headerMonth is " + headerMonth);
+    
+                // show all events and the date of today in notes after right after page load
+                if(activeDay == undefined) {
+                    getActiveDay(currentDay);
+                    updateEvents(currentDay);
+                }
             }
             currentDay++;
         }
@@ -234,11 +238,11 @@ function displayCalendar() {
     document.getElementById('headerMonth').appendChild(buttNext);
 
 
-    
+
 
     // updateEvents(headerMonth);
     addListner(headerMonth);
- 
+
 
 
 }
@@ -247,13 +251,13 @@ function addListner() {
     const days = document.querySelectorAll("td");
     days.forEach((day) => {
         day.addEventListener("click", (e) => {
-            // set current day as active day
-            activeDay = Number(e.target.innerHTML);
+
             // call active day after click
             getActiveDay(e.target.innerHTML);
             updateEvents(Number(e.target.innerHTML));
-            
-            
+
+            // set current day as active day
+            activeDay = Number(e.target.innerHTML);
 
             //remove active from already active day
             days.forEach((day) => {
@@ -347,12 +351,12 @@ function updateEvents(headerMonth) {
     eventsArr.forEach((event) => {
         // get events of active days only
         // console.log(currentMonth + 1 + " is currentMonth")
-        console.log(event.day + " is event day")
-        console.log(event.month + " is event month")
-        console.log(event.year + " is event year")
-        console.log(headerMonth + " is headerMonth")
-        console.log(currentMonth + 1 + " is currentMonth")
-        console.log(currentYear + " is currentYear")
+        // console.log(event.day + " is event day")
+        // console.log(event.month + " is event month")
+        // console.log(event.year + " is event year")
+        // console.log(headerMonth + " is headerMonth")
+        // console.log(currentMonth + 1 + " is currentMonth")
+        // console.log(currentYear + " is currentYear")
         if (
             headerMonth === event.day &&
             currentMonth + 1 === event.month &&
