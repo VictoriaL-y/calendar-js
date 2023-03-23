@@ -20,7 +20,16 @@ body {
 
 .card {
     position: absolute;
+    /* background: rgba(19, 35, 19, 0.5); */
+    background: none;
+    color: #f5f5f5;
+    text-align: center;
+    padding: 2rem;
 }
+
+/* .card h2 {
+  color: #fff;
+} */
 
 body .calendar {
     height: 100vh;
@@ -120,6 +129,32 @@ td.active::before {
 }
 
 /* event class, not today */
+
+
+.calendar  td.event {
+  position: relative;
+}
+.calendar td.event::after {
+  content: "";
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  width: 25%;
+  height: 6px;
+  border-radius: 30px;
+  transform: translateX(-50%);
+  background-color: #599954ca;
+}
+.calendar td.day:hover.event::after {
+  background-color: #fff;
+}
+.calendar td.active.event::after {
+  background-color: #fff;
+  bottom: 20%;
+}
+.calendar td.active.event {
+  padding-bottom: 10px;
+}
 /* .calendar td#today::after {
     content: '';
     position: absolute;
@@ -278,8 +313,13 @@ td.active::before {
   }
 
   .events .no-event {
-    text-align: center;
-    margin-top: 35%;
+    /* text-align: center;
+    margin-top: 35%; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
     color: #e2ffe0ca;
   }
 
