@@ -615,13 +615,13 @@ function getPosition() {
                 + "&lon="
                 + long
                 + "&limit=2&appid="
-                // + 'e9ca98e57b68488e060c64799d86e7fc'
+                + 'API KEY'
             ).then((response) => response.json())
                 .then((data) => weather.fetchWeather(data));
         }
 
         let weather = {
-            // apiKey: "e9ca98e57b68488e060c64799d86e7fc",
+            apiKey: "API KEY",
 
             fetchWeather: function (data) {
                 console.log(data)
